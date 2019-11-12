@@ -165,5 +165,5 @@ function showMsg(msg, type) {
 function getRepoFromUrl() {
   const urlRepo = location.hash && location.hash.slice(1);
 
-  return urlRepo && decodeURIComponent(urlRepo);
+  return urlRepo && urlRepo !== "" && decodeURIComponent(urlRepo);
 }
