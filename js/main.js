@@ -50,7 +50,7 @@ function updateDT(data, repo) {
   const forks = [];
   const i = 0;
   Promise.all(data.map(fork =>
-    promiseTimeout(i++ * 1000).then(() => {
+    promiseTimeout(i++ * 1000).then(() =>
       fetch(`https://api.github.com/repos/${repo}/compare/master...${fork.owner.login}:master`)
         .then(resp => resp.json())
         .then(data => {
@@ -62,7 +62,7 @@ function updateDT(data, repo) {
           fork.total_commits = data.total_commits;
           forks.push(fork);
         })
-    })
+    )
   ))
   .then(_ => {
     const dataSet = forks.map(fork =>
