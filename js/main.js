@@ -40,32 +40,35 @@ function updateDT(data, repo) {
 
   // Format dataset and redraw DataTable. Use second index for key name
   const forks = [];
-
+  const i = 0;
   Promise.all(data.map(fork =>
-    fetch(`https://api.github.com/repos/${repo}/compare/master...${fork.owner.login}:master`)
-      .then(resp => resp.json())
-      .then(data => {
-        fork.repoLink = `<a href="https://github.com/${fork.full_name}">Link</a>`;
-        fork.ownerName = fork.owner.login;
-        fork.status = data.status;
-        fork.ahead_by = data.ahead_by;
-        fork.behind_by = data.behind_by;
-        fork.total_commits = data.total_commits;
-        forks.push(fork);
+    setTimeout( () => {
+      fetch(`https://api.github.com/repos/${repo}/compare/master...${fork.owner.login}:master`)
+        .then(resp => resp.json())
+        .then(data => {
+          fork.repoLink = `<a href="https://github.com/${fork.full_name}">Link</a>`;
+          fork.ownerName = fork.owner.login;
+          fork.status = data.status;
+          fork.ahead_by = data.ahead_by;
+          fork.behind_by = data.behind_by;
+          fork.total_commits = data.total_commits;
+          forks.push(fork);
       })
+    }, i++);
   ))
-    .then(_ => {
-      const dataSet = forks.map(fork =>
-        window.columnNamesMap.map(colNM => fork[colNM[1]])
-      );
-      window.forkTable
-        .clear()
-        .rows.add(dataSet)
-        .draw();
-    })
-    .catch(error => {
-      handleError(error);
-    });
+  .then(_ => {
+    const dataSet = forks.map(fork =>
+      window.columnNamesMap.map(colNM => fork[colNM[1]])
+    );
+    window.forkTable
+      .clear()
+      .rows.add(dataSet)
+      .draw()
+    ;
+  })
+  .catch(error => {
+    handleError(error);
+  });
 }
 
 function initDT() {
