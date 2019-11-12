@@ -48,7 +48,7 @@ function updateDT(data, repo) {
   
   // Format dataset and redraw DataTable. Use second index for key name
   const forks = [];
-  const i = 0;
+  let i = 0;
   Promise.all(data.map(fork =>
     promiseTimeout(i++ * 1000).then(() =>
       fetch(`https://api.github.com/repos/${repo}/compare/master...${fork.owner.login}:master`)
