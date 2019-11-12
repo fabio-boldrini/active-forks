@@ -34,15 +34,23 @@ function fetchData() {
   }
 }
 
+function promiseTimeout (time) {
+  return new Promise(function(resolve,reject){
+    setTimeout(function(){resolve(time);},time);
+  });
+};
+
 function updateDT(data, repo) {
   // Remove any alerts, if any:
   if ($('.alert')) $('.alert').remove();
 
+  
+  
   // Format dataset and redraw DataTable. Use second index for key name
   const forks = [];
   const i = 0;
   Promise.all(data.map(fork =>
-    setTimeout( () => {
+    promiseTimeout(i++ * 1000).then(() => {
       fetch(`https://api.github.com/repos/${repo}/compare/master...${fork.owner.login}:master`)
         .then(resp => resp.json())
         .then(data => {
@@ -53,8 +61,8 @@ function updateDT(data, repo) {
           fork.behind_by = data.behind_by;
           fork.total_commits = data.total_commits;
           forks.push(fork);
-      })
-    }, i++);
+        })
+    })
   ))
   .then(_ => {
     const dataSet = forks.map(fork =>
